@@ -2,6 +2,8 @@
 [Link](https://documenter.getpostman.com/view/41648814/2sAYX3phcp)
 
 # How to run
+To run this server you need to have installed symfony and composer
+
 Clone repository
 
 git clone https://github.com/ipz231-pmo/user-api
