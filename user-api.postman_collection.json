@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "df24d0ba-42de-4642-9626-4d4c0109ab5b",
+		"name": "user-api",
+		"description": "This api is used to get user's data. To get or set any data you need to be authorized. Users can only get data, however to create, update or delete data you have to be authorized as admin.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "41648814"
+	},
+	"item": [
+		{
+			"name": "Authorization",
+			"item": [
+				{
+					"name": "User Authorization",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"user\",\r\n    \"password\":\"user\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/login_check",
+						"description": "This requst returns token to authorize as user."
+					},
+					"response": []
+				},
+				{
+					"name": "Admin Authorization",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"admin\",\r\n    \"password\":\"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/login_check",
+						"description": "This requst returns token to authorize as admin."
+					},
+					"response": []
+				}
+			],
+			"description": "To authorize you need to have a JsonWebToken (later JWT). You have to add header to your request with your token."
+		},
+		{
+			"name": "Get Requests",
+			"item": [
+				{
+					"name": "Get All Users Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/get-all/",
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request.\n\nA successful GET response will have a `200 OK` status, and should include json data about all users.  \nYou need to be authorized as user to use this endpoint.\n\nExample of output data:\n\n``` json\n{\n    \"data\": [\n        {\n            \"id\": \"1\",\n            \"name\": \"Maks\",\n            \"email\": \"ipz231_pmo@student.ztu.edu.ua\"\n        },\n        {\n            \"id\": \"2\",\n            \"name\": \"Maks\",\n            \"email\": \"ipz231_pmo@student.ztu.edu.ua\"\n        },\n        {\n            \"id\": \"3\",\n            \"name\": \"Maks\",\n            \"email\": \"ipz231_pmo@student.ztu.edu.ua\"\n        },\n        {\n            \"id\": \"4\",\n            \"name\": \"Maks\",\n            \"email\": \"ipz231_pmo@student.ztu.edu.ua\"\n        },\n        {\n            \"id\": \"5\",\n            \"name\": \"Maks\",\n            \"email\": \"ipz231_pmo@student.ztu.edu.ua\"\n        }\n    ]\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"protocolVersion": "http1"
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": "{{base_url}}/api/get-user/{{id}}/",
+						"description": "This is GET request for getting concrete user data. Use api/get-user/{id}/ to get info about selected user.\n\nYou need to be authorized as user to use this endpoint.\n\nExample of use:\n\n`http://localhost:8000/api/get-user/3/`\n\nExample of answer:\n\n``` json\n{\n    \"data\": {\n        \"id\": \"3\",\n        \"name\": \"Maks\",\n        \"email\": \"ipz231_pmo@student.ztu.edu.ua\"\n    }\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post Requests",
+			"item": [
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Den\",\n    \"email\": \"new\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/create-user/",
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response. Creates user.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code.\n\nYou need to be authorized as admin to use this endpoint.\n\nIf request executes successfully you get json request with all user data:\n\n``` json\n{\n    \"data\": {\n        \"id\": 6,\n        \"name\": \"Den\",\n        \"email\": \"new\"\n    }\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains POST Requests."
+		},
+		{
+			"name": "Delete Requests",
+			"item": [
+				{
+					"name": "Delete User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/delete-user/{{id}}/",
+						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You identify the entity being updated by including an identifier in the URL (eg. `delete-user/1/` ).\n\nYou need to be authorized as admin to use this endpoint.\n\nA successful DELETE request returns a `204 No Content` response code."
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains DELETE Requests."
+		},
+		{
+			"name": "Patch Requests",
+			"item": [
+				{
+					"name": "Update User Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"New name\",\n    \"email\": \"New email\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/update-user/{{id}}/",
+						"description": "This is a PATCH request and it is used to update an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PATCH request. Your entity can be updated by including an identifier in the URL (eg. `/update-user/1/`).\n\nA successful PATCH request returns a `200 OK` and new data.\n\nIn request body you should enter either name or email, or both."
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains PATCH Requests."
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3Mzg1OTA4NzAsImV4cCI6MTczODU5NDQ3MCwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoidXNlciJ9.AVxw6OEVQOVPs_IXCSwa4Zg5DaxfXjw0hM80AT2eEUyKX2GM8btripKjonw-QM1tiCp1uGi6KPvIMaqUMdfXnWCKGFNnODODkbC8QK1P5xxqePDIwYwPLyHEcdtRBVnmcKbIIKnv9yDWRsl89jAkCv18ifwjFvoJXSZ2x6qiOYMxUaUOM9de_gnzUNpelZq65yvtI5CHvo8SloLvWKbibOUgm3PnL3BFDrOXqfNDzXBICiJRBCrWpBfImMYY3mkL3xBtbzdYH46W_dyR0RHbTz1PGwbNdPJ2rcIK8zky2Q5hz-CCQnNvFBWFC95TVrgRtL3EifSEKA3rGE78qHwHEg"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
